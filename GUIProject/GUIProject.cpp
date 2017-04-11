@@ -92,7 +92,7 @@ private:
 			|| (b[2] == "O" && b[4] == "O" && b[6] == "O"))
 		{
 			Lines_window::clear();
-			tic_tac_TITLE.set_label("PLAYER " + b[1] + " WINS!");
+			tic_tac_TITLE.set_label("PLAYER " + b[2] + " WINS!");
 		}
 		attach(reset);
 	}
