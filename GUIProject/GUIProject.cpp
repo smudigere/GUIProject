@@ -4,10 +4,11 @@
 #include "GUI.h"
 #include "Window.h"
 
+
 using namespace std;
 using namespace Graph_lib;
 
-//
+
 struct Lines_window : Window 
 {
 	Lines_window(Point xy, int w, int h, const string& title);
