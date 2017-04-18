@@ -1,3 +1,7 @@
+/*
+Author: Samartha Mudigere
+CSE-232 Oakland University Final Project
+*/
 #include <iostream>
 #include <sstream>
 #include "Graph.h"         
@@ -401,13 +405,484 @@ struct Conversion : Window
 	Conversion(Point xy, int w, int h, const string& title);
 
 private:
+	Text From;
+	Button USD;
+	Button CAN;
+	Button INR;
+	Button EUR;
+	Button CNY;
+	Button USDto;
+	Button CANto;
+	Button INRto;
+	Button EURto;
+	Button CNYto;
+	Out_box result;
+	Button reset;
 
+	std::string from;
+	void button_usd();
+	void button_can();
+	void button_inr();
+	void button_eur();
+	void button_cny();
+	void inrto();
+	void usdto();
+	void canto();
+	void eurto();
+	void cnyto();
+	int button_reset();
+	void onFromClick()
+	{
+		From.set_label("Choose the Currency you want to Convert to:");
+		USD.hide();
+		CAN.hide();
+		INR.hide();
+		EUR.hide();
+		CNY.hide();
+		attach(USDto);
+		attach(CANto);
+		attach(INRto);
+		attach(EURto);
+		attach(CNYto);
+
+		if (from == "USD")
+		{
+			USDto.hide();
+		} else
+		if (from == "CAD")
+		{
+			CANto.hide();
+		}
+		else
+		if (from == "INR")
+		{
+			INRto.hide();
+		}
+		else
+		if (from == "EUR")
+		{
+			EURto.hide();
+		}
+		else
+		if (from == "CNY")
+		{
+			CNYto.hide();
+		}
+	}
+
+	static void usd_button(Address, Address);
+	static void can_button(Address, Address);
+	static void inr_button(Address, Address);
+	static void eur_button(Address, Address);
+	static void cny_button(Address, Address);
+	static void inrto_button(Address, Address);
+	static void usdto_button(Address, Address);
+	static void reset_button(Address, Address);
+	static void canto_button(Address, Address);
+	static void eurto_button(Address, Address);
+	static void cnyto_button(Address, Address);
 };
-
+//USD/CAN/INR/EUR/CNY
 Conversion::Conversion(Point xy, int w, int h, const string& title)
-	:Window(xy, w, h, title)
+	:Window(xy, w, h, title),
+	From(Point(100, 30), "Choose the Currency you want to Convert from:"),
+	USD(Point(100, 50), 50, 30, "USD", usd_button),
+	CAN(Point(100, 85), 50, 30, "CAD", can_button),
+	INR(Point(100, 120), 50, 30, "INR", inr_button),
+	EUR(Point(100, 155), 50, 30, "EUR", eur_button),
+	CNY(Point(100, 190), 50, 30, "CNY", cny_button),
+	USDto(Point(325, 50), 50, 30, "USD", usdto_button),
+	CANto(Point(325, 85), 50, 30, "CAD", canto_button),
+	INRto(Point(325, 120), 50, 30, "INR", inrto_button),
+	EURto(Point(325, 155), 50, 30, "EUR", eurto_button),
+	CNYto(Point(325, 190), 50, 30, "CNY", cnyto_button),
+	result(Point(200, 275), 175, 50, ""),
+	reset(Point(300, 325), 50, 20, "Reset", reset_button)
 {
+	attach(USD);
+	attach(CAN);
+	attach(INR);
+	attach(EUR);
+	attach(CNY);
+	attach(From);
+	From.set_color(Color::dark_blue);
+	attach(reset);
+}
+
+void Conversion::cnyto_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).cnyto();
+}
+
+void Conversion::cnyto()
+{
+	std::string url = "\"http://api.fixer.io/latest?base=";
+	url.append(from);
+	url.append("&symbols=");
+	url.append(from);
+	url.append(",CNY\"");
+
+	system(("curl " + url + " > to_CNY.txt").c_str());
+	std::ifstream inFile;
+	std::string str;
+	inFile.open("to_CNY.txt");
+
+	while (!inFile.eof())
+	{
+		getline(inFile, str); // Saves the line in STRING.
+	}
+	std::vector<std::string> v;
+	char c = ':';
+
+	std::string buff{ "" };
+
+	for (auto n : str)
+	{
+		if (n != c) buff += n; else
+			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	inFile.close();
+
+
+	char a = '}';
+	buff = "";
+
+	for (auto n : v[4])
+	{
+		if (n != a) buff += n; else
+			if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	std::cout << "\n\n" << v[5];
+
+	attach(result);
+	USDto.hide();
+	CANto.hide();
+	INRto.hide();
+	EURto.hide();
+	CNYto.hide();
+	detach(From);
+	result.put("   1 " + from + " = " + v[5] + " CNY");
+}
+
+void Conversion::eurto_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).eurto();
+}
+
+void Conversion::eurto()
+{
+	std::string url = "\"http://api.fixer.io/latest?base=";
+	url.append(from);
+	url.append("&symbols=");
+	url.append(from);
+	url.append(",EUR\"");
+
+	system(("curl " + url + " > to_EUR.txt").c_str());
+	std::ifstream inFile;
+	std::string str;
+	inFile.open("to_EUR.txt");
+
+	while (!inFile.eof())
+	{
+		getline(inFile, str); // Saves the line in STRING.
+	}
+	std::vector<std::string> v;
+	char c = ':';
+
+	std::string buff{ "" };
+
+	for (auto n : str)
+	{
+		if (n != c) buff += n; else
+			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	inFile.close();
+
+
+	char a = '}';
+	buff = "";
+
+	for (auto n : v[4])
+	{
+		if (n != a) buff += n; else
+			if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	std::cout << "\n\n" << v[5];
+
+	attach(result);
+	USDto.hide();
+	CANto.hide();
+	INRto.hide();
+	EURto.hide();
+	CNYto.hide();
+	detach(From);
+	result.put("   1 " + from + " = " + v[5] + " EUR");
+}
+
+void Conversion::canto_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).canto();
+}
+
+void Conversion::canto()
+{
+	std::string url = "\"http://api.fixer.io/latest?base=";
+	url.append(from);
+	url.append("&symbols=");
+	url.append(from);
+	url.append(",CAD\"");
+
+	system(("curl " + url + " > to_CAD.txt").c_str());
+	std::ifstream inFile;
+	std::string str;
+	inFile.open("to_CAD.txt");
+
+	while (!inFile.eof())
+	{
+		getline(inFile, str); // Saves the line in STRING.
+	}
+	std::vector<std::string> v;
+	char c = ':';
+
+	std::string buff{ "" };
+
+	for (auto n : str)
+	{
+		if (n != c) buff += n; else
+			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	inFile.close();
+
+
+	char a = '}';
+	buff = "";
+
+	for (auto n : v[4])
+	{
+		if (n != a) buff += n; else
+			if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	std::cout << "\n\n" << v[5];
+
+	attach(result);
+	USDto.hide();
+	CANto.hide();
+	INRto.hide();
+	EURto.hide();
+	CNYto.hide();
+	detach(From);
+	result.put("   1 " + from + " = " + v[5] + " CAD");
+}
+
+void Conversion::usdto_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).usdto();
+}
+
+
+void Conversion::usdto()
+{
+	std::string url = "\"http://api.fixer.io/latest?base=";
+	url.append(from);
+	url.append("&symbols=");
+	url.append(from);
+	url.append(",USD\"");
+
+	system(("curl " + url + " > to_USD.txt").c_str());
+	std::ifstream inFile;
+	std::string str;
+	inFile.open("to_USD.txt");
+
+	while (!inFile.eof())
+	{
+		getline(inFile, str); // Saves the line in STRING.
+	}
+	std::vector<std::string> v;
+	char c = ':';
+
+	std::string buff{ "" };
+
+	for (auto n : str)
+	{
+		if (n != c) buff += n; else
+			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	inFile.close();
+
+
+	char a = '}';
+	buff = "";
+
+	for (auto n : v[4])
+	{
+		if (n != a) buff += n; else
+			if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	std::cout << "\n\n" << v[5];
+
+	attach(result);
+	USDto.hide();
+	CANto.hide();
+	INRto.hide();
+	EURto.hide();
+	CNYto.hide();
+	detach(From);
+	result.put("   1 " + from + " = " + v[5] + " USD");
+}
+
+
+void Conversion::reset_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).button_reset();
+}
+
+int Conversion::button_reset()
+{
+	Conversion win(Point(100, 100), 600, 400, "Currency Conversion");
+	hide();
+	return gui_main();
+}
+
+void Conversion::inrto_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).inrto();
+}
+
+void Conversion::inrto()
+{
+	std::string url = "\"http://api.fixer.io/latest?base=";
+	url.append(from);
+	url.append("&symbols=");
+	url.append(from);
+	url.append(",INR\"");
+
+	system(("curl " + url + " > to_INR.txt").c_str());
+	std::ifstream inFile;
+	std::string str;
+	inFile.open("to_INR.txt");
+
+	while (!inFile.eof())
+	{
+		getline(inFile, str); // Saves the line in STRING.
+	}
+			std::vector<std::string> v;
+			char c = ':';
+
+			std::string buff{ "" };
+
+			for (auto n : str)
+			{
+				if (n != c) buff += n; else
+					if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+			}
+			if (buff != "")
+				v.push_back(buff);
+
+			inFile.close();
+
+
+			char a = '}';
+			buff = "";
+
+			for (auto n : v[4])
+			{
+				if (n != a) buff += n; else
+					if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+			}
+			if (buff != "")
+				v.push_back(buff);
+
+			std::cout << "\n\n" << v[5];
+
+			attach(result);
+			USDto.hide();
+			CANto.hide();
+			INRto.hide();
+			EURto.hide();
+			CNYto.hide();
+			detach(From);
+			result.put("   1 " + from + " = " + v[5] + " INR");
+}
 	
+
+
+void Conversion::cny_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).button_cny();
+}
+
+void Conversion::button_cny()
+{
+	from = "CNY";
+	onFromClick();
+}
+
+void Conversion::eur_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).button_eur();
+}
+
+void Conversion::button_eur()
+{
+	from = "EUR";
+	onFromClick();
+}
+
+void Conversion::inr_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).button_inr();
+}
+
+void Conversion::button_inr()
+{
+	from = "INR";
+	onFromClick();
+}
+
+void Conversion::can_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).button_can();
+}
+
+void Conversion::button_can()
+{
+	from = "CAD";
+	onFromClick();
+}
+
+void Conversion::usd_button(Address, Address pw)
+{
+	reference_to<Conversion>(pw).button_usd();
+}
+
+void Conversion::button_usd()
+{
+	from = "USD";
+	onFromClick();
 }
 
 struct Main_Screen : Window
@@ -440,6 +915,8 @@ Main_Screen::Main_Screen(Point xy, int w, int h, const string& title)
 	attach(TIC_TAC_TOE);
 	attach(exiting);
 	attach(conversion);
+	TITLE.set_color(Color::dark_blue);
+	TITLE.set_font_size(30);
 }
 
 void Main_Screen::exit_project(Address, Address pw)
