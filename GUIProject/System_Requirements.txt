@@ -1,0 +1,8 @@
+This program will run only on Windows OS (Vista or later).
+
+For Currency Conversion to work, the system needs to have curl executable
+installed- "curl" command is used to fetch live data for currency conversion.
+
+The device must also be connected to the internet.
+
+Close this file, for the application to start.

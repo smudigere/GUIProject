@@ -7,7 +7,8 @@ CSE-232 Oakland University Final Project
 #include "Graph.h"         
 #include "GUI.h"
 #include "Window.h"
-
+#include <WinInet.h>
+#pragma comment(lib,"Wininet.lib")
 
 using namespace std;
 using namespace Graph_lib;
@@ -516,58 +517,66 @@ void Conversion::cnyto_button(Address, Address pw)
 
 void Conversion::cnyto()
 {
-	std::string url = "\"http://api.fixer.io/latest?base=";
-	url.append(from);
-	url.append("&symbols=");
-	url.append(from);
-	url.append(",CNY\"");
+	bool bConnect = InternetCheckConnection(L"http://www.google.com", FLAG_ICC_FORCE_CONNECTION, 0);
 
-	system(("curl " + url + " > to_CNY.txt").c_str());
-	std::ifstream inFile;
-	std::string str;
-	inFile.open("to_CNY.txt");
-
-	while (!inFile.eof())
+	if (bConnect)
 	{
-		getline(inFile, str); // Saves the line in STRING.
+		std::string url = "\"http://api.fixer.io/latest?base=";
+		url.append(from);
+		url.append("&symbols=");
+		url.append(from);
+		url.append(",CNY\"");
+
+		system(("curl " + url + " > to_CNY.txt").c_str());
+		std::ifstream inFile;
+		std::string str;
+		inFile.open("to_CNY.txt");
+
+		while (!inFile.eof())
+		{
+			getline(inFile, str); // Saves the line in STRING.
+		}
+		std::vector<std::string> v;
+		char c = ':';
+
+		std::string buff{ "" };
+
+		for (auto n : str)
+		{
+			if (n != c) buff += n; else
+				if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		inFile.close();
+
+
+		char a = '}';
+		buff = "";
+
+		for (auto n : v[4])
+		{
+			if (n != a) buff += n; else
+				if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		std::cout << "\n\n" << v[5];
+
+		attach(result);
+		USDto.hide();
+		CANto.hide();
+		INRto.hide();
+		EURto.hide();
+		CNYto.hide();
+		detach(From);
+		result.put("   1 " + from + " = " + v[5] + " CNY");
 	}
-	std::vector<std::string> v;
-	char c = ':';
-
-	std::string buff{ "" };
-
-	for (auto n : str)
-	{
-		if (n != c) buff += n; else
-			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	else {
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
 	}
-	if (buff != "")
-		v.push_back(buff);
-
-	inFile.close();
-
-
-	char a = '}';
-	buff = "";
-
-	for (auto n : v[4])
-	{
-		if (n != a) buff += n; else
-			if (n == a && buff != "") { v.push_back(buff); buff = ""; }
-	}
-	if (buff != "")
-		v.push_back(buff);
-
-	std::cout << "\n\n" << v[5];
-
-	attach(result);
-	USDto.hide();
-	CANto.hide();
-	INRto.hide();
-	EURto.hide();
-	CNYto.hide();
-	detach(From);
-	result.put("   1 " + from + " = " + v[5] + " CNY");
 }
 
 void Conversion::eurto_button(Address, Address pw)
@@ -577,58 +586,66 @@ void Conversion::eurto_button(Address, Address pw)
 
 void Conversion::eurto()
 {
-	std::string url = "\"http://api.fixer.io/latest?base=";
-	url.append(from);
-	url.append("&symbols=");
-	url.append(from);
-	url.append(",EUR\"");
+	bool bConnect = InternetCheckConnection(L"http://www.google.com", FLAG_ICC_FORCE_CONNECTION, 0);
 
-	system(("curl " + url + " > to_EUR.txt").c_str());
-	std::ifstream inFile;
-	std::string str;
-	inFile.open("to_EUR.txt");
-
-	while (!inFile.eof())
+	if (bConnect)
 	{
-		getline(inFile, str); // Saves the line in STRING.
+		std::string url = "\"http://api.fixer.io/latest?base=";
+		url.append(from);
+		url.append("&symbols=");
+		url.append(from);
+		url.append(",EUR\"");
+
+		system(("curl " + url + " > to_EUR.txt").c_str());
+		std::ifstream inFile;
+		std::string str;
+		inFile.open("to_EUR.txt");
+
+		while (!inFile.eof())
+		{
+			getline(inFile, str); // Saves the line in STRING.
+		}
+		std::vector<std::string> v;
+		char c = ':';
+
+		std::string buff{ "" };
+
+		for (auto n : str)
+		{
+			if (n != c) buff += n; else
+				if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		inFile.close();
+
+
+		char a = '}';
+		buff = "";
+
+		for (auto n : v[4])
+		{
+			if (n != a) buff += n; else
+				if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		std::cout << "\n\n" << v[5];
+
+		attach(result);
+		USDto.hide();
+		CANto.hide();
+		INRto.hide();
+		EURto.hide();
+		CNYto.hide();
+		detach(From);
+		result.put("   1 " + from + " = " + v[5] + " EUR");
 	}
-	std::vector<std::string> v;
-	char c = ':';
-
-	std::string buff{ "" };
-
-	for (auto n : str)
-	{
-		if (n != c) buff += n; else
-			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	else {
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
 	}
-	if (buff != "")
-		v.push_back(buff);
-
-	inFile.close();
-
-
-	char a = '}';
-	buff = "";
-
-	for (auto n : v[4])
-	{
-		if (n != a) buff += n; else
-			if (n == a && buff != "") { v.push_back(buff); buff = ""; }
-	}
-	if (buff != "")
-		v.push_back(buff);
-
-	std::cout << "\n\n" << v[5];
-
-	attach(result);
-	USDto.hide();
-	CANto.hide();
-	INRto.hide();
-	EURto.hide();
-	CNYto.hide();
-	detach(From);
-	result.put("   1 " + from + " = " + v[5] + " EUR");
 }
 
 void Conversion::canto_button(Address, Address pw)
@@ -638,58 +655,66 @@ void Conversion::canto_button(Address, Address pw)
 
 void Conversion::canto()
 {
-	std::string url = "\"http://api.fixer.io/latest?base=";
-	url.append(from);
-	url.append("&symbols=");
-	url.append(from);
-	url.append(",CAD\"");
+	bool bConnect = InternetCheckConnection(L"http://www.google.com", FLAG_ICC_FORCE_CONNECTION, 0);
 
-	system(("curl " + url + " > to_CAD.txt").c_str());
-	std::ifstream inFile;
-	std::string str;
-	inFile.open("to_CAD.txt");
-
-	while (!inFile.eof())
+	if (bConnect)
 	{
-		getline(inFile, str); // Saves the line in STRING.
+		std::string url = "\"http://api.fixer.io/latest?base=";
+		url.append(from);
+		url.append("&symbols=");
+		url.append(from);
+		url.append(",CAD\"");
+
+		system(("curl " + url + " > to_CAD.txt").c_str());
+		std::ifstream inFile;
+		std::string str;
+		inFile.open("to_CAD.txt");
+
+		while (!inFile.eof())
+		{
+			getline(inFile, str); // Saves the line in STRING.
+		}
+		std::vector<std::string> v;
+		char c = ':';
+
+		std::string buff{ "" };
+
+		for (auto n : str)
+		{
+			if (n != c) buff += n; else
+				if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		inFile.close();
+
+
+		char a = '}';
+		buff = "";
+
+		for (auto n : v[4])
+		{
+			if (n != a) buff += n; else
+				if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		std::cout << "\n\n" << v[5];
+
+		attach(result);
+		USDto.hide();
+		CANto.hide();
+		INRto.hide();
+		EURto.hide();
+		CNYto.hide();
+		detach(From);
+		result.put("   1 " + from + " = " + v[5] + " CAD");
 	}
-	std::vector<std::string> v;
-	char c = ':';
-
-	std::string buff{ "" };
-
-	for (auto n : str)
-	{
-		if (n != c) buff += n; else
-			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	else {
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
 	}
-	if (buff != "")
-		v.push_back(buff);
-
-	inFile.close();
-
-
-	char a = '}';
-	buff = "";
-
-	for (auto n : v[4])
-	{
-		if (n != a) buff += n; else
-			if (n == a && buff != "") { v.push_back(buff); buff = ""; }
-	}
-	if (buff != "")
-		v.push_back(buff);
-
-	std::cout << "\n\n" << v[5];
-
-	attach(result);
-	USDto.hide();
-	CANto.hide();
-	INRto.hide();
-	EURto.hide();
-	CNYto.hide();
-	detach(From);
-	result.put("   1 " + from + " = " + v[5] + " CAD");
 }
 
 void Conversion::usdto_button(Address, Address pw)
@@ -700,58 +725,66 @@ void Conversion::usdto_button(Address, Address pw)
 
 void Conversion::usdto()
 {
-	std::string url = "\"http://api.fixer.io/latest?base=";
-	url.append(from);
-	url.append("&symbols=");
-	url.append(from);
-	url.append(",USD\"");
+	bool bConnect = InternetCheckConnection(L"http://www.google.com", FLAG_ICC_FORCE_CONNECTION, 0);
 
-	system(("curl " + url + " > to_USD.txt").c_str());
-	std::ifstream inFile;
-	std::string str;
-	inFile.open("to_USD.txt");
-
-	while (!inFile.eof())
+	if (bConnect)
 	{
-		getline(inFile, str); // Saves the line in STRING.
+		std::string url = "\"http://api.fixer.io/latest?base=";
+		url.append(from);
+		url.append("&symbols=");
+		url.append(from);
+		url.append(",USD\"");
+
+		system(("curl " + url + " > to_USD.txt").c_str());
+		std::ifstream inFile;
+		std::string str;
+		inFile.open("to_USD.txt");
+
+		while (!inFile.eof())
+		{
+			getline(inFile, str); // Saves the line in STRING.
+		}
+		std::vector<std::string> v;
+		char c = ':';
+
+		std::string buff{ "" };
+
+		for (auto n : str)
+		{
+			if (n != c) buff += n; else
+				if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		inFile.close();
+
+
+		char a = '}';
+		buff = "";
+
+		for (auto n : v[4])
+		{
+			if (n != a) buff += n; else
+				if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		std::cout << "\n\n" << v[5];
+
+		attach(result);
+		USDto.hide();
+		CANto.hide();
+		INRto.hide();
+		EURto.hide();
+		CNYto.hide();
+		detach(From);
+		result.put("   1 " + from + " = " + v[5] + " USD");
 	}
-	std::vector<std::string> v;
-	char c = ':';
-
-	std::string buff{ "" };
-
-	for (auto n : str)
-	{
-		if (n != c) buff += n; else
-			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	else {
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
 	}
-	if (buff != "")
-		v.push_back(buff);
-
-	inFile.close();
-
-
-	char a = '}';
-	buff = "";
-
-	for (auto n : v[4])
-	{
-		if (n != a) buff += n; else
-			if (n == a && buff != "") { v.push_back(buff); buff = ""; }
-	}
-	if (buff != "")
-		v.push_back(buff);
-
-	std::cout << "\n\n" << v[5];
-
-	attach(result);
-	USDto.hide();
-	CANto.hide();
-	INRto.hide();
-	EURto.hide();
-	CNYto.hide();
-	detach(From);
-	result.put("   1 " + from + " = " + v[5] + " USD");
 }
 
 
@@ -774,58 +807,67 @@ void Conversion::inrto_button(Address, Address pw)
 
 void Conversion::inrto()
 {
-	std::string url = "\"http://api.fixer.io/latest?base=";
-	url.append(from);
-	url.append("&symbols=");
-	url.append(from);
-	url.append(",INR\"");
+	bool bConnect = InternetCheckConnection(L"http://www.google.com", FLAG_ICC_FORCE_CONNECTION, 0);
 
-	system(("curl " + url + " > to_INR.txt").c_str());
-	std::ifstream inFile;
-	std::string str;
-	inFile.open("to_INR.txt");
-
-	while (!inFile.eof())
+	if (bConnect)
 	{
-		getline(inFile, str); // Saves the line in STRING.
+		std::cout << "Working\n";
+		std::string url = "\"http://api.fixer.io/latest?base=";
+		url.append(from);
+		url.append("&symbols=");
+		url.append(from);
+		url.append(",INR\"");
+
+		system(("curl " + url + " > to_INR.txt").c_str());
+		std::ifstream inFile;
+		std::string str;
+		inFile.open("to_INR.txt");
+
+		while (!inFile.eof())
+		{
+			getline(inFile, str); // Saves the line in STRING.
+		}
+		std::vector<std::string> v;
+		char c = ':';
+
+		std::string buff{ "" };
+
+		for (auto n : str)
+		{
+			if (n != c) buff += n; else
+				if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		inFile.close();
+
+
+		char a = '}';
+		buff = "";
+
+		for (auto n : v[4])
+		{
+			if (n != a) buff += n; else
+				if (n == a && buff != "") { v.push_back(buff); buff = ""; }
+		}
+		if (buff != "")
+			v.push_back(buff);
+
+		std::cout << "\n\n" << v[5];
+
+		attach(result);
+		USDto.hide();
+		CANto.hide();
+		INRto.hide();
+		EURto.hide();
+		CNYto.hide();
+		detach(From);
+		result.put("   1 " + from + " = " + v[5] + " INR");
 	}
-			std::vector<std::string> v;
-			char c = ':';
-
-			std::string buff{ "" };
-
-			for (auto n : str)
-			{
-				if (n != c) buff += n; else
-					if (n == c && buff != "") { v.push_back(buff); buff = ""; }
-			}
-			if (buff != "")
-				v.push_back(buff);
-
-			inFile.close();
-
-
-			char a = '}';
-			buff = "";
-
-			for (auto n : v[4])
-			{
-				if (n != a) buff += n; else
-					if (n == a && buff != "") { v.push_back(buff); buff = ""; }
-			}
-			if (buff != "")
-				v.push_back(buff);
-
-			std::cout << "\n\n" << v[5];
-
-			attach(result);
-			USDto.hide();
-			CANto.hide();
-			INRto.hide();
-			EURto.hide();
-			CNYto.hide();
-			detach(From);
-			result.put("   1 " + from + " = " + v[5] + " INR");
+	else {
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
+	}
 }
 	
 
@@ -954,6 +996,7 @@ int Main_Screen::tictactoe_open()
 
 int main()
 try {
+	system("System_Requirements.txt");
 	Main_Screen win(Point(100, 100), 600, 400, "C++ Project");
     return gui_main();
 }
