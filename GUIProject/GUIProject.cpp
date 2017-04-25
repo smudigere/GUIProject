@@ -13,19 +13,21 @@ CSE-232 Oakland University Final Project
 using namespace std;
 using namespace Graph_lib;
 
-
+/*
+This window is for Tic Tac Toe.
+*/
 struct Lines_window : Window 
 {
 	Lines_window(Point xy, int w, int h, const string& title);
 private:
 	int pos = 0;
-	std::string a[2] = {"X", "O"};
+	std::string a[2] = {"X", "O"};	//player can either be X or O.
 	std::string b[9];
 	Line l1;
 	Line l2;
 	Line l3;
 	Line l4;
-	Button a1;
+	Button a1;	//9 buttons for the game, available for the players to click.
 	Button a2;
 	Button a3;
 	Button b1;
@@ -34,7 +36,7 @@ private:
 	Button c1;
 	Button c2;
 	Button c3;
-	Button reset;
+	Button reset;		//reset button.
 	Text x1;	Text x2;	Text x3;
 	Text x4;	Text x5;	Text x6;
 	Text x7;	Text x8;	Text x9;
@@ -50,6 +52,9 @@ private:
 	void c2_button();
 	void c3_button();
 	int buttonReset();
+	/*
+	after every button of the game is clicked, this function is invoked to check if a player has won the game.
+	*/
 	void checkStatus()
 	{
 		if ((b[0] == "X" && b[1] == "X" && b[2] == "X")
@@ -115,6 +120,9 @@ private:
 	static void resetButton(Address, Address);
 };
 
+/*
+Constuctor for Lines_window. All elements for GUI is defined here.
+*/
 Lines_window::Lines_window(Point xy, int w, int h, const string& title)
 	:Window(xy, w, h, title),
 	a1(Point(200, 200), 40, 40, "", A1),
@@ -191,7 +199,7 @@ void Lines_window::A1(Address, Address pw)
 	reference_to<Lines_window>(pw).a1_button();
 }
 
-void Lines_window::a1_button()
+void Lines_window::a1_button()	
 {
 	a1.hide();
 	
@@ -401,26 +409,31 @@ void Lines_window::c3_button()
 	checkStatus(); 
 }
 
+
+/*
+This is the GUI window for Currency conversion. All elements of the GUI are initialized here.
+All data is returned is saved into a text file. The text file is opened to read the data and display it to the user.
+*/
 struct Conversion : Window
 {
 	Conversion(Point xy, int w, int h, const string& title);
 
 private:
 	Text From;
-	Button USD;
+	Button USD;		//5 buttons for currency conversion to convert from.
 	Button CAN;
 	Button INR;
 	Button EUR;
 	Button CNY;
-	Button USDto;
+	Button USDto;	//5 buttons for the currency to convert to.
 	Button CANto;
 	Button INRto;
 	Button EURto;
 	Button CNYto;
-	Out_box result;
+	Out_box result;		//this is where the result will be displayed.
 	Button reset;
 
-	std::string from;
+	std::string from;		//this string will hold the currency that the user wants to convert from. (USD/CNY/INR/CAD/EUR).
 	void button_usd();
 	void button_can();
 	void button_inr();
@@ -484,6 +497,9 @@ private:
 	static void cnyto_button(Address, Address);
 };
 //USD/CAN/INR/EUR/CNY
+/*
+This is the Constructor for Conversion GUI screen.
+*/
 Conversion::Conversion(Point xy, int w, int h, const string& title)
 	:Window(xy, w, h, title),
 	From(Point(100, 30), "Choose the Currency you want to Convert from:"),
@@ -525,9 +541,9 @@ void Conversion::cnyto()
 		url.append(from);
 		url.append("&symbols=");
 		url.append(from);
-		url.append(",CNY\"");
+		url.append(",CNY\"");	//the url string is appended all the elements needed to make the appropriate API call.
 
-		system(("curl " + url + " > to_CNY.txt").c_str());
+		system(("curl " + url + " > to_CNY.txt").c_str());	//all data returned is saved to the text file.
 		std::ifstream inFile;
 		std::string str;
 		inFile.open("to_CNY.txt");
@@ -565,17 +581,17 @@ void Conversion::cnyto()
 
 		std::cout << "\n\n" << v[5];
 
-		attach(result);
+		attach(result);		//appropriate data is displayed from this line after, the data is being broken down.
 		USDto.hide();
 		CANto.hide();
 		INRto.hide();
 		EURto.hide();
 		CNYto.hide();
 		detach(From);
-		result.put("   1 " + from + " = " + v[5] + " CNY");
+		result.put("   1 " + from + " = " + v[5] + " CNY");		//the result for Conversting from other currencies to CNY.
 	}
 	else {
-		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");		//lets the user know, they have no internet for the conversion. 
 	}
 }
 
@@ -594,7 +610,7 @@ void Conversion::eurto()
 		url.append(from);
 		url.append("&symbols=");
 		url.append(from);
-		url.append(",EUR\"");
+		url.append(",EUR\"");		//the url string is appended all the elements needed to make the appropriate API call.
 
 		system(("curl " + url + " > to_EUR.txt").c_str());
 		std::ifstream inFile;
@@ -644,7 +660,7 @@ void Conversion::eurto()
 		result.put("   1 " + from + " = " + v[5] + " EUR");
 	}
 	else {
-		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");	//lets the user know, they have no internet for the conversion. 
 	}
 }
 
@@ -663,7 +679,7 @@ void Conversion::canto()
 		url.append(from);
 		url.append("&symbols=");
 		url.append(from);
-		url.append(",CAD\"");
+		url.append(",CAD\"");		//the url string is appended all the elements needed to make the appropriate API call.
 
 		system(("curl " + url + " > to_CAD.txt").c_str());
 		std::ifstream inFile;
@@ -710,10 +726,10 @@ void Conversion::canto()
 		EURto.hide();
 		CNYto.hide();
 		detach(From);
-		result.put("   1 " + from + " = " + v[5] + " CAD");
+		result.put("   1 " + from + " = " + v[5] + " CAD");		//result of CAD.
 	}
 	else {
-		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\""); //lets the user know, they have no internet for the conversion. 
 	}
 }
 
@@ -738,7 +754,7 @@ void Conversion::usdto()
 		system(("curl " + url + " > to_USD.txt").c_str());
 		std::ifstream inFile;
 		std::string str;
-		inFile.open("to_USD.txt");
+		inFile.open("to_USD.txt");		//the url string is appended all the elements needed to make the appropriate API call.
 
 		while (!inFile.eof())
 		{
@@ -780,10 +796,10 @@ void Conversion::usdto()
 		EURto.hide();
 		CNYto.hide();
 		detach(From);
-		result.put("   1 " + from + " = " + v[5] + " USD");
+		result.put("   1 " + from + " = " + v[5] + " USD");		//result for USD.
 	}
 	else {
-		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");	//lets the user know, they have no internet for the conversion. 
 	}
 }
 
@@ -816,7 +832,7 @@ void Conversion::inrto()
 		url.append(from);
 		url.append("&symbols=");
 		url.append(from);
-		url.append(",INR\"");
+		url.append(",INR\"");		//the url string is appended all the elements needed to make the appropriate API call.
 
 		system(("curl " + url + " > to_INR.txt").c_str());
 		std::ifstream inFile;
@@ -863,10 +879,10 @@ void Conversion::inrto()
 		EURto.hide();
 		CNYto.hide();
 		detach(From);
-		result.put("   1 " + from + " = " + v[5] + " INR");
+		result.put("   1 " + from + " = " + v[5] + " INR");		//result for INR.
 	}
 	else {
-		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");
+		system("start \"\" cmd /c \"echo Check Internet Connection!&echo(&pause\"");	//lets the user know, they have no internet for the conversion. 
 	}
 }
 	
@@ -879,7 +895,7 @@ void Conversion::cny_button(Address, Address pw)
 
 void Conversion::button_cny()
 {
-	from = "CNY";
+	from = "CNY";		//when CNY button is pressed for currency conversion to convert from.
 	onFromClick();
 }
 
@@ -890,7 +906,7 @@ void Conversion::eur_button(Address, Address pw)
 
 void Conversion::button_eur()
 {
-	from = "EUR";
+	from = "EUR";		//when EUR button is pressed for currency conversion to convert from.
 	onFromClick();
 }
 
@@ -901,7 +917,7 @@ void Conversion::inr_button(Address, Address pw)
 
 void Conversion::button_inr()
 {
-	from = "INR";
+	from = "INR";	//when INR button is pressed for currency conversion to convert from.
 	onFromClick();
 }
 
@@ -912,7 +928,7 @@ void Conversion::can_button(Address, Address pw)
 
 void Conversion::button_can()
 {
-	from = "CAD";
+	from = "CAD";	//when CAD button is pressed for currency conversion to convert from.
 	onFromClick();
 }
 
@@ -923,10 +939,14 @@ void Conversion::usd_button(Address, Address pw)
 
 void Conversion::button_usd()
 {
-	from = "USD";
+	from = "USD";		//when USD button is pressed for currency conversion to convert from.
 	onFromClick();
 }
 
+
+/*
+The GUI which displays the GUI the options for either Tic Tac Toe or Currency Conversion.
+*/
 struct Main_Screen : Window
 {
 	Main_Screen(Point xy, int w, int h, const string& title);
@@ -996,8 +1016,8 @@ int Main_Screen::tictactoe_open()
 
 int main()
 try {
-	system("System_Requirements.txt");
-	Main_Screen win(Point(100, 100), 600, 400, "C++ Project");
+	system("System_Requirements.txt");		//opens a text file to configure system requirements
+	Main_Screen win(Point(100, 100), 600, 400, "C++ Project");		//opens main screen where the user can choose between tic-tac-toe or Currency Conversion.
     return gui_main();
 }
 catch(exception& e) {
