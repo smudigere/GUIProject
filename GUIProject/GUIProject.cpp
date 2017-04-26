@@ -943,6 +943,88 @@ void Conversion::button_usd()
 	onFromClick();
 }
 
+/*
+Weather GUI window.
+*/
+struct Weather : Window
+{
+	Weather(Point xy, int w, int h, const string& title);
+private:
+	In_box a;
+	Button b;
+	Out_box C;
+
+	int zipcode;
+
+	void button_enter();
+
+	static void enter_button(Address, Address);
+};
+
+Weather::Weather(Point xy, int w, int h, const string& title)
+	:Window(xy, w, h, title),
+	a(Point(100, 100), 50, 30, "ZIPCODE"),
+	b(Point(100, 175), 50, 30, "ENTER", enter_button),
+	C(Point(100, 225), 100, 50, "")
+	{
+		attach(a);
+		attach(b);
+		attach(C);
+	}
+
+void Weather::enter_button(Address, Address pw)
+{
+	reference_to<Weather>(pw).button_enter();
+}
+
+void Weather::button_enter()
+{
+	zipcode = a.get_int();
+	std::cout << zipcode << "\n";
+	std::string url = "\"http://api.openweathermap.org/data/2.5/weather?zip=";
+	url.append(to_string(zipcode));
+	url.append(",us&appid=ec4fde06ea0dee05969dd6709f6e4cb7\"");
+	system(("curl " + url + " > weather_data.txt").c_str());
+	//http://api.openweathermap.org/data/2.5/weather?zip=48326,us&appid=ec4fde06ea0dee05969dd6709f6e4cb7 example weather call for Auburn Hills
+
+	ifstream inFile;
+	std::string str;
+	inFile.open("weather_data.txt");
+
+	while (!inFile.eof())
+	{
+		getline(inFile, str); // Saves the line in STRING.
+	}
+	std::vector<std::string> v;
+	char c = ':';
+
+	std::string buff{ "" };
+
+	for (auto n : str)
+	{
+		if (n != c) buff += n; else
+			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	inFile.close();
+	std::cout << v[11];
+
+	c = ',';
+	buff = "";
+	for (auto n : v[11])
+	{
+		if (n != c) buff += n; else
+			if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+	}
+	if (buff != "")
+		v.push_back(buff);
+
+	std::cout << "\n" << v[33];
+
+	C.put(v[33] + " F");	//displays the data to the user.
+}
 
 /*
 The GUI which displays the GUI the options for either Tic Tac Toe or Currency Conversion.
@@ -956,14 +1038,17 @@ private:
 	Button TIC_TAC_TOE;
 	Button exiting;
 	Button conversion;
+	Button weather;
 
 	void exiting_project();
 	int convert_currency();
 	int tictactoe_open();
+	int enter_button();
 
 	static void open_tictactoe(Address, Address);
 	static void exit_project(Address, Address);
 	static void currency_convert(Address, Address);
+	static void button_enter(Address, Address);
 };
 
 Main_Screen::Main_Screen(Point xy, int w, int h, const string& title)
@@ -971,15 +1056,29 @@ Main_Screen::Main_Screen(Point xy, int w, int h, const string& title)
 	TITLE(Point(200, 50), "C++ Final Project"),
 	TIC_TAC_TOE(Point(200, 100), 150, 40, "TIC TAC TOE", open_tictactoe),
 	exiting(Point(200, 300), 50, 20, "EXIT", exit_project),
-	conversion(Point(200, 150), 150, 40, "Currency Conversion", currency_convert)
+	conversion(Point(200, 150), 150, 40, "Currency Conversion", currency_convert),
+	weather(Point(200, 200), 150, 40, "Weather", button_enter)
 {
 	attach(TITLE);
 	attach(TIC_TAC_TOE);
 	attach(exiting);
 	attach(conversion);
+	attach(weather);
 	TITLE.set_color(Color::dark_blue);
 	TITLE.set_font_size(30);
 }
+
+void Main_Screen::button_enter(Address, Address pw)
+{
+	reference_to<Main_Screen>(pw).enter_button();
+}
+
+int Main_Screen::enter_button()
+{
+	Weather win(Point(100, 100), 600, 400, "Weather");
+	return gui_main();
+}
+
 
 void Main_Screen::exit_project(Address, Address pw)
 {
