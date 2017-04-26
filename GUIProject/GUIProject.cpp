@@ -1023,7 +1023,7 @@ void Weather::button_enter()
 
 	std::cout << "\n" << v[33];
 
-	C.put(v[33] + " F");	//displays the data to the user.
+	C.put(v[33] + " K");	//displays the data to the user.
 }
 
 /*
